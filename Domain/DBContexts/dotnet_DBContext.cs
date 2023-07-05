@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dotnet_CRUD.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_CRUD.Domain.DBContexts;
@@ -18,6 +19,8 @@ public partial class dotnet_DBContext : DbContext
     public virtual DbSet<Character> Characters { get; set; }
 
     public virtual DbSet<Kyu> Kyus { get; set; }
+
+    public virtual DbSet<SearchCharacter_SP> SearchCharacter_SP { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.

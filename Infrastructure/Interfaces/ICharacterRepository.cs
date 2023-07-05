@@ -13,5 +13,7 @@ namespace Dotnet_CRUD.Infrastructure.Interfaces
         Task<ResCodeMessage> addCharacter(AddCharacterDto character);
         Task<ResCodeMessage> updateCharacter(UpdateCharacterDto character);
         Task<ResCodeMessage> deleteCharacter(string characterID);
+        // SP: 2
+        Task<ResCodeMessage> searchCharacter(string search);
     }
 }

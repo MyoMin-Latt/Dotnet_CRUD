@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dapper;
 using Dotnet_CRUD.Domain.DBContexts;
 using Dotnet_CRUD.Domain.Repository.Interfaces;
 using Dotnet_CRUD.Infrastructure.Interfaces;
@@ -43,7 +46,7 @@ namespace Dotnet_CRUD.Infrastructure
             Mapper _mapper = MapperExtension.GetMapper<AddCharacterDto, Character>();
             Character character_data = _mapper.Map<Character>(character);
             character_data.Id = Guid.NewGuid().ToString();
-            _DBContext.Characters.Add(character_data);
+            await _DBContext.Characters.AddAsync(character_data);
             _DBUnitOfWork.Commit();
 
             _mapper = MapperExtension.GetMapper<Character, CharacterDTO>();
@@ -137,6 +140,42 @@ namespace Dotnet_CRUD.Infrastructure
                 throw e;
             }
         }
+
+        // SP: 1
+        public async Task<ResCodeMessage> searchCharacter(string search)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Search", search);
+
+                // SP: New Style
+                DbConnection conn = _DBContext.Database.GetDbConnection();
+                var procedure = "[SearchCharacter]";
+                var result_query = conn.Query<dynamic>(procedure, parameters, commandType: CommandType.StoredProcedure);
+
+                // SP: Old Style
+                // Need to create return > SearchCharacter_SP
+                // 
+                string sqlstr = "EXEC SearchCharacter @Search='" + search + "'";
+                var search_Characters = _DBContext.SearchCharacter_SP.FromSqlRaw(sqlstr).ToList();
+
+
+                var res = new ResCodeMessage()
+                {
+                    v_rescode = "201",
+                    v_data = search_Characters
+                };
+
+                return res;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
 
 

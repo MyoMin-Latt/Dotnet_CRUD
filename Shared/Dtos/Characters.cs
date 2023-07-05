@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_CRUD.Shared.Dtos
 {
@@ -44,4 +45,13 @@ namespace Dotnet_CRUD.Shared.Dtos
         public string Name { get; set; } = "Frodo";
         public RpgClass Class { get; set; } = RpgClass.Knight;
     }
+
+    // SP: Old Style
+    [Keyless]
+    public class SearchCharacter_SP
+    {
+        public string CharacterID { get; set; }
+        public string CharacterName { get; set; }
+    }
+
 }

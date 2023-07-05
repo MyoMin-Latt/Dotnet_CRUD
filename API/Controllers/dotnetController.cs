@@ -129,6 +129,36 @@ namespace Dotnet_CRUD.API.Controllers
             }
         }
 
+        // SP: 3
+        [HttpGet("search/{search}")]
+        public async Task<IActionResult> SearchCharacter([FromRoute] string search)
+        {
+            try
+            {
+
+                var results = await _unitOfWork.searchCharacter(search);
+                if (results.v_rescode == "201")
+                {
+                    var response = _responseHandler.GetResponse<ResponseData>(ResponseEnum.R201);
+                    return Ok(new { code = response.code, message = response.message, data = results.v_data });
+                }
+                if (results.v_rescode == "003")
+                {
+                    var response = _responseHandler.GetResponse<ResponseData>(ResponseEnum.R003);
+                    return Ok(new { code = response.code, message = response.message, description = results.v_resmessage });
+                }
+
+                var res = _responseHandler.GetResponse<ResponseData>(ResponseEnum.R000);
+                return StatusCode(500, new { code = res.code, message = res.message, description = results.v_resmessage });
+
+            }
+            catch (Exception ex)
+            {
+                var response = _responseHandler.GetResponse<ResponseData>(ResponseEnum.R001);
+                return BadRequest(new { code = response.code, message = response.message, description = ex.Message });
+            }
+        }
+
 
 
 
